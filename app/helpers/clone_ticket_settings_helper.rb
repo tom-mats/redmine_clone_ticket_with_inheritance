@@ -1,0 +1,2 @@
+module CloneTicketSettingsHelper
+end
