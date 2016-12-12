@@ -1,3 +1,6 @@
 # English strings go here for Rails i18n
 en:
   # my_label: "My label"
+  clone_ticket: "Clone Ticket"
+  clone_ticket_settings_main_title: "Settings"
+  clone_ticket_settings_optional_title: "Optional"
