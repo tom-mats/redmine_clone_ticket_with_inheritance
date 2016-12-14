@@ -9,7 +9,7 @@ end
 
 Rails.configuration.to_prepare do
   require_dependency 'projects_helper'
-  unless ProjectsHelper.included_module.include? CloneTicketProjectsHelperPatch
+  unless ProjectsHelper.included_modules.include? CloneTicketProjectsHelperPatch
     ProjectsHelper.send(:include, CloneTicketProjectsHelperPatch)
   end
 end
