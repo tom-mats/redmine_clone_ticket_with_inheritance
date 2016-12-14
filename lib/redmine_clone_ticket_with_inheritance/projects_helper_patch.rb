@@ -1,7 +1,7 @@
 require_dependency 'projects_helper'
 
 module CloneTicketProjectsHelperPatch
-  def self.include(base)
+  def self.included(base)
     base.send(:include, ProjectsHelperMethodCloneTicket)
     base.class_eval do
       alias_method_chain :project_settings_tab, :clone_ticket
