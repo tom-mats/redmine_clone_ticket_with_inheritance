@@ -1,7 +1,7 @@
 class CloneTicketSettings < ActiveRecord::Base
   unloadable
 
-  belongs_to : project
+  belongs_to :project
   validates_uniqueness_of :project_id
   validates_presence_of :project_id
 
