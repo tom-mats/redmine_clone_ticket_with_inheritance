@@ -10,6 +10,7 @@ module CloneTicketProjectsHelperPatch
 
   module ProjectsHelperMethodCloneTicket
     def project_settings_tab_with_clone_ticket
+      puts 'test'
       tabs = project_settings_tab_without_clone_ticket # call super
       @clone_ticket_settings = CloneTicketSettings.find_or_create(@project_id)
       action =

@@ -6,3 +6,10 @@ Redmine::Plugin.register :redmine_clone_ticket_with_inheritance do
   url 'http://example.com/path/to/plugin'
   author_url 'http://example.com/about'
 end
+
+Rails.configuration.to_prepare do
+  require_dependency 'projects_helper'
+  unless ProjectsHelper.included_module.include? CloneTicketProjectsHelperPatch
+    ProjectsHelper.send(:include, CloneTicketProjectsHelperPatch)
+  end
+end
