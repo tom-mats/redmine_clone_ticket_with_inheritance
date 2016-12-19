@@ -13,8 +13,8 @@
                         } do |f|
   %>
 
-    <%= f.text_field 'dst_project_id' %>
-    <%= f.text_field 'dst_tracker_id' %>
+    <%= f.select 'dst_project_id', Project.all.sort.map{|t| [t.name, t.id.to_i]} %>
+    <%= f.select 'dst_tracker_id', Tracker.all.sort.map{ |t| [t.name, t.id.to_i]} %>
   <div id="optional">
     <p><%= f.check_box 'copy_attachment' %></p>
     <p><%= f.check_box 'copy_children' %> </p>
