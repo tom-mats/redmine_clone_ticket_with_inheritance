@@ -1,6 +1,7 @@
 class CreateCloneTicketSettings < ActiveRecord::Migration
   def change
     create_table :clone_ticket_settings do |t|
+      t.belongs_to :project, index: true, foreign_key: true
       t.integer :project_id
       t.integer :src_tracker_id
       t.integer :dst_project_id

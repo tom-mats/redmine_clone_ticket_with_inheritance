@@ -8,7 +8,6 @@ Redmine::Plugin.register :redmine_clone_ticket_with_inheritance do
 end
 
 Dir[File.expand_path('../lib/redmine_clone_ticket_with_inheritance', __FILE__) << '/*.rb'].each do |file|
-  puts file
   require_dependency file
 end
 

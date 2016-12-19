@@ -4,3 +4,10 @@ en:
   clone_ticket: "Clone Ticket"
   clone_ticket_settings_main_title: "Settings"
   clone_ticket_settings_optional_title: "Optional"
+  field_dst_project: 'Copy to'
+  field_dst_tracker: 'as'
+  field_copy_attachment: 'Copy attachment'
+  field_copy_children: 'Copy children'
+  field_copy_related: 'Copy related ticket'
+  field_back_to_status: 'Back status of source ticket'
+  submit_clone_ticket: 'Submit'

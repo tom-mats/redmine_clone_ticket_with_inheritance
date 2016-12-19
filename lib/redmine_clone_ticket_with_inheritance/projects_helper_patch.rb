@@ -10,15 +10,14 @@ module CloneTicketProjectsHelperPatch
 
   module ProjectsHelperMethodCloneTicket
     def project_settings_tabs_with_clone_ticket
-      puts 'test'
       tabs = project_settings_tabs_without_clone_ticket # call super
-      @clone_ticket_settings = CloneTicketSettings.find_or_create(@project_id)
+      @clone_ticket_settings = CloneTicketSettings.find_or_create(@project.id)
       action =
         {
           name: 'clone_ticket',
           controller: 'clone_ticket_settings',
           action: :edit,
-          partial: 'clone_ticket_settings/edit',
+          partial: 'clone_ticket_settings/show',
           label: :clone_ticket
         }
       tabs << action
