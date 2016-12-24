@@ -5,6 +5,10 @@ Redmine::Plugin.register :redmine_clone_ticket_with_inheritance do
   version '0.0.1'
   url 'http://example.com/path/to/plugin'
   author_url 'http://example.com/about'
+  project_module :clone_ticket_with_inheritance do
+    permission :do_clone, :redmine_clone_ticket_with_inheritance => :do
+  end
+
 end
 
 Dir[File.expand_path('../lib/redmine_clone_ticket_with_inheritance', __FILE__) << '/*.rb'].each do |file|
