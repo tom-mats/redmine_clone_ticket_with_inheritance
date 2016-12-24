@@ -8,6 +8,6 @@ en:
   field_dst_tracker: 'as'
   field_copy_attachment: 'Copy attachment'
   field_copy_children: 'Copy children'
-  field_copy_related: 'Copy related ticket'
+  field_copy_related: 'Clear related ticket'
   field_back_to_status: 'Back status of source ticket'
   submit_clone_ticket: 'Submit'
