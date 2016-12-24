@@ -13,6 +13,7 @@ module CloneTicketIssuesHooks
 
       @clone_with = CloneTicketSettings.find_or_create(@project.id)
       return unless @clone_with
+
       org_before = Issue.find(org.id)
       return if org_before.status_id == org.status_id
 
@@ -33,11 +34,19 @@ module CloneTicketIssuesHooks
       if @clone_with.back_to_status
         org.status_id = org_before.status_id if org_before
       end
+      org_relation_hist = org.relations_from.select {|e| e.relation_type == IssueRelation::TYPE_COPIED_TO}
+
       if @clone_with.clear_related
-        org_issue.relations_from.clear
-        org_issue.relations_to.clear
+        org.relations_from.clear
       end
       copied.save!
+      org_relation_hist.each do |rel|
+        hist_issue = Issue.find(rel.issue_to_id)
+        if hist_issue
+          new_rel = IssueRelation.new(:issue_from => copied, :issue_to => hist_issue, :relation_type => IssueRelation::TYPE_FOLLOWS)
+          new_rel.save!
+        end
+      end
     end
   end
 end

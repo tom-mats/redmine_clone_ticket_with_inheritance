@@ -7,8 +7,8 @@ class CreateCloneTicketSettings < ActiveRecord::Migration
       t.integer :dst_project_id
       t.integer :dst_tracker_id
       t.boolean :copy_attachment
-      t.integer :copy_children
-      t.integer :clear_related
+      t.boolean :copy_children
+      t.boolean :clear_related
       t.boolean :back_to_status
       t.boolean :force_category
     end
