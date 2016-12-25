@@ -45,22 +45,23 @@ module CloneTicketIssuesHooks
       end
     end
 
+    def clear_relation(copied, org)
+      org.relations_from.clear
+      new_rel = IssueRelation.new(:issue_from => org, :issue_to => copied, :relation_type => IssueRelation::TYPE_COPIED_TO)
+      new_rel.save!
+    end
+
+    def create_relation(copied, issue)
+      return if issue.nil? || issue.id == copied.id
+      params = {:issue_from => copied, :issue_to => issue, :relation_type => IssueRelation::TYPE_FOLLOWS}
+      new_rel = IssueRelation.new(params)
+      new_rel.save!
+    end
+
     def move_or_copy_relation(org, copied)
       copy_history = org.relations_from.select {|e| e.relation_type == IssueRelation::TYPE_COPIED_TO}
-      if @clone_with.clear_related
-        org.relations_from.clear
-        new_rel = IssueRelation.new(:issue_from => org, :issue_to => copied, :relation_type => IssueRelation::TYPE_COPIED_TO)
-        new_rel.save!
-      end
-
-      params = {:issue_from => copied, :relation_type => IssueRelation::TYPE_FOLLOWS}
-      copy_history.each do |rel|
-        hist_issue = Issue.find(rel.issue_to_id)
-        if hist_issue && hist_issue.id != copied.id
-          new_rel = IssueRelation.new(params.merge({:issue_to => hist_issue}))
-          new_rel.save!
-        end
-      end
+      clear_relation(copied, org) if @clone_with.clear_related
+      copy_history.each { |rel|  create_relation(copied, Issue.find(rel.issue_to_id)) }
     end
 
     def copy_issue(org)
