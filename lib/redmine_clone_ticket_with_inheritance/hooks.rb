@@ -15,11 +15,8 @@ module CloneTicketIssuesHooks
 
     def new_category_with_force(name)
       params = {:project_id => @clone_with.dst_project_id, :name => name}
-      new_category = IssueCategory.find_by(params)
-      unless new_category
-        new_category = IssueCategory.new(params)
-        new_category.save!
-      end
+      new_category = IssueCategory.find_by(params) || IssueCategory.new(params)
+      new_category.save! if new_category.id.nil?
       new_category
     end
 
@@ -64,6 +61,23 @@ module CloneTicketIssuesHooks
       copy_history.each { |rel|  create_relation(copied, Issue.find(rel.issue_to_id)) }
     end
 
+    def link_to_result(copied)
+      "##{copied.id}"
+    end
+
+    def target_cf(org, name)
+      target = IssueCustomField.find_by_name(name)
+      org.custom_field_values.select { |cf| cf.custom_field.id == target.id }.first
+    end
+
+    def add_link_to_results(copied, org)
+      cf = target_cf(org, 'Latest result')
+      cf.value = link_to_result(copied) if cf.present?
+
+      cf = target_cf(org, 'Results')
+      cf.value = cf.value.split(',').unshift(link_to_result(copied)).first(10).join(',') if cf.present?
+    end
+
     def copy_issue(org)
       @project = Project.find(org.project_id)
       return unless @project.module_enabled?(:clone_ticket_with_inheritance)
@@ -87,6 +101,7 @@ module CloneTicketIssuesHooks
 
       back_to_origin(org_before, org)
       move_or_copy_relation(org, copied)
+      add_link_to_results(copied, org)
     end
   end
 end
