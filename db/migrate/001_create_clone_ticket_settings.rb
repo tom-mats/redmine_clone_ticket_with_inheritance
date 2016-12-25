@@ -12,6 +12,7 @@ class CreateCloneTicketSettings < ActiveRecord::Migration
       t.boolean :back_to_status
       t.boolean :back_to_version
       t.boolean :force_category
+      t.boolean :use_cf_as_version
     end
   end
 end

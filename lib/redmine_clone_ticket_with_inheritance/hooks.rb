@@ -33,10 +33,17 @@ module CloneTicketIssuesHooks
         end
         copied.category_id = new_category.id
       end
-      copied.custom_field_values = org.custom_field_values.inject({}){ |h,v| h[v.custom_field_id] = v.value; h}
-      unless dst_project.shared_versions.select{|e| e.id == org.fixed_version_id}.empty?
+      if org.fixed_version_id && !(dst_project.shared_versions.select{|e| e.id == org.fixed_version_id}.empty?)
         copied.fixed_version_id = org.fixed_version_id
+      else
+        if @clone_with.use_cf_as_version
+          cfs = copied.custom_field_values
+          v = dst_project.shared_versions.select{|e| !(cfs.select { |cf| cf.custom_field.default_value == e.name}.empty?)}
+          copied.fixed_version_id = v.first.id unless v.empty?
+        end
       end
+      copied.custom_field_values = org.custom_field_values.inject({}){ |h,v| h[v.custom_field_id] = v.value; h}
+
 
       org.status_id = org_before.status_id if @clone_with.back_to_status
       org.relations_from.clear if @clone_with.clear_related

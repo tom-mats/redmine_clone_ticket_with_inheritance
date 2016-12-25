@@ -13,4 +13,5 @@ en:
   field_back_to_status: 'Rollback status of source ticket'
   field_back_to_version: 'Rollback version of source ticket'
   field_force_category: 'Use original category by compulsion'
+  field_use_cf_as_version: 'Use custom field values similar as version'
   submit_clone_ticket: 'Submit'
