@@ -15,8 +15,11 @@ module CloneTicketIssuesHooks
       return unless @clone_with
 
       org_before = Issue.find(org.id)
-      return if org_before.status_id == org.status_id
+      return if !org_before || org_before.status_id == org.status_id
 
+      org_relation_hist = org.relations_from.select {|e| e.relation_type == IssueRelation::TYPE_COPIED_TO}
+
+      dst_project = Project.find(@clone_with.dst_project_id)
       copied = Issue.new.copy_from(org, {:attachment => @clone_with[:copy_attachment]})
       copied.project_id = @clone_with.dst_project_id if @clone_with.dst_project_id
       copied.tracker_id = @clone_with.dst_tracker_id if @clone_with.dst_tracker_id
@@ -31,15 +34,15 @@ module CloneTicketIssuesHooks
         copied.category_id = new_category.id
       end
       copied.custom_field_values = org.custom_field_values.inject({}){ |h,v| h[v.custom_field_id] = v.value; h}
-      if @clone_with.back_to_status
-        org.status_id = org_before.status_id if org_before
+      unless dst_project.shared_versions.select{|e| e.id == org.fixed_version_id}.empty?
+        copied.fixed_version_id = org.fixed_version_id
       end
-      org_relation_hist = org.relations_from.select {|e| e.relation_type == IssueRelation::TYPE_COPIED_TO}
 
-      if @clone_with.clear_related
-        org.relations_from.clear
-      end
+      org.status_id = org_before.status_id if @clone_with.back_to_status
+      org.relations_from.clear if @clone_with.clear_related
+      org.fixed_version_id = org_before.fixed_version_id if @clone_with.back_to_version
       copied.save!
+
       org_relation_hist.each do |rel|
         hist_issue = Issue.find(rel.issue_to_id)
         if hist_issue
@@ -47,6 +50,8 @@ module CloneTicketIssuesHooks
           new_rel.save!
         end
       end
+
+
     end
   end
 end

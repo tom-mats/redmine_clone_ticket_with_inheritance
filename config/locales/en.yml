@@ -2,7 +2,7 @@
 en:
   # my_label: "My label"
   clone_ticket_with_inheritance: "Ticket clone"
-  clone_ticket: "Clone Ticket"
+  clone_ticket: "Ticket Clone"
   clone_ticket_settings_main_title: "Settings"
   clone_ticket_settings_optional_title: "Optional"
   field_dst_project: 'Copy to'
@@ -10,6 +10,7 @@ en:
   field_copy_attachment: 'Copy attachment'
   field_copy_children: 'Copy children'
   field_clear_related: 'Clear related ticket'
-  field_back_to_status: 'Back status of source ticket'
+  field_back_to_status: 'Rollback status of source ticket'
+  field_back_to_version: 'Rollback version of source ticket'
   field_force_category: 'Use original category by compulsion'
   submit_clone_ticket: 'Submit'

@@ -1,27 +1,21 @@
 <div id="clone_ticket_settings">
-  <%
+    <%
     @clone_ticket_settings = CloneTicketSettings.find_or_create(@project.id)
   %>
-  <%= labelled_form_for :setting, @clone_ticket_settings,
-                        :url => {
-                          :controller => :clone_ticket_settings,
-                          :action => 'update',
-                          :id => @project,
-                          :tab => 'clone_ticket',
-                          :partial => 'clone_ticket_settings/update',
-                          :setting_id => @clone_ticket_settings.id
-                        } do |f|
-  %>
+    <%= labelled_form_for :setting, @clone_ticket_settings, :url => { :controller => :clone_ticket_settings, :action => 'update', :id => @project, :tab => 'clone_ticket', :partial => 'clone_ticket_settings/update', :setting_id =>
+    @clone_ticket_settings.id } do |f| %>
 
     <%= f.select 'dst_project_id', Project.all.sort.map{|t| [t.name, t.id.to_i]} %>
     <%= f.select 'dst_tracker_id', Tracker.all.sort.map{ |t| [t.name, t.id.to_i]} %>
-  <div id="optional">
-    <p><%= f.check_box 'copy_attachment' %></p>
-    <p><%= f.check_box 'copy_children' %> </p>
-    <p><%= f.check_box 'clear_related' %></p>
-    <p><%= f.check_box 'back_to_status' %></p>
-    <p><%= f.check_box 'force_category' %></p>
-  </div>
-  <%= submit_tag l(:submit_clone_ticket) %>
-  <% end %>
+    <div id="optional">
+        <p><%= f.check_box 'copy_attachment' %></p>
+        <p><%= f.check_box 'copy_children' %>
+        </p>
+        <p><%= f.check_box 'clear_related' %></p>
+        <p><%= f.check_box 'back_to_status' %></p>
+        <p><%= f.check_box 'back_to_version' %></p>
+        <p><%= f.check_box 'force_category' %></p>
+    </div>
+    <%= submit_tag l(:submit_clone_ticket) %>
+    <% end %>
 </div>

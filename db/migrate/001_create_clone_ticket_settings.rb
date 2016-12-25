@@ -10,6 +10,7 @@ class CreateCloneTicketSettings < ActiveRecord::Migration
       t.boolean :copy_children
       t.boolean :clear_related
       t.boolean :back_to_status
+      t.boolean :back_to_version
       t.boolean :force_category
     end
   end
