@@ -13,32 +13,30 @@ module CloneTicketIssuesHooks
       issue.fixed_version_id = org.fixed_version_id if @clone_with.back_to_version
     end
 
-    def new_category_with_force(name)
+    def category_id_with_force(name)
       params = {:project_id => @clone_with.dst_project_id, :name => name}
       new_category = IssueCategory.find_by(params) || IssueCategory.new(params)
       new_category.save! if new_category.id.nil?
-      new_category
+      new_category.id
     end
 
     def category_id(org)
-      if @clone_with.force_category && org.category_id
-        org_category = IssueCategory.find_by_id(org.category_id)
-        new_category_with_force(org_category.name).id
-      end
+      return if !(@clone_with.force_category) || org.category_id.nil?
+      org_category = IssueCategory.find_by_id(org.category_id)
+      category_id_with_force(org_category.name)
     end
 
-    def fixed_version_id_by_custom_fields(cfs)
-      if @clone_with.use_cf_as_version
-        v = @dst_project.shared_versions.select{|e| cfs.select { |cf| cf.custom_field.default_value == e.name}.present?}
-        v.first.id if v.present?
-      end
+    def fixed_version_id_by_custom_fields
+      return unless @clone_with.use_cf_as_version
+      v = @dst_project.shared_versions.select{|e| IssueCustomField.find_by_default_value(e.name).present?}
+      v.first.id if v.present?
     end
 
-    def fixed_version_id(org, cfs)
+    def fixed_version_id(org)
       if org.fixed_version_id && @dst_project.shared_versions.select{|e| e.id == org.fixed_version_id}.present?
         org.fixed_version_id
       else
-        fixed_version_id_by_custom_fields(cfs)
+        fixed_version_id_by_custom_fields
       end
     end
 
@@ -95,7 +93,7 @@ module CloneTicketIssuesHooks
       copied.project_id = @clone_with.dst_project_id if @clone_with.dst_project_id
       copied.tracker_id = @clone_with.dst_tracker_id if @clone_with.dst_tracker_id
       copied.category_id = category_id(org)
-      copied.fixed_version_id = fixed_version_id(org, copied.custom_field_values)
+      copied.fixed_version_id = fixed_version_id(org)
       copied.custom_field_values = org.custom_field_values.inject({}){ |h,v| h[v.custom_field_id] = v.value; h}
       copied.save!
 
