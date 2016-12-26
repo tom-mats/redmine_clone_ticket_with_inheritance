@@ -1,6 +1,6 @@
 # Clone ticket with Inheritance
 
-## overview
+## Overview
 
 This plugins copies tickets automatically to the specified project and tracker when the status is changed.
 We have implemented to manage testcases and corresponding test results on Redmine as tickets.
@@ -19,3 +19,7 @@ We have implemented to manage testcases and corresponding test results on Redmin
 * Specify the trackers to copy ticket.
 * Specify the status to copy ticket.
   * Currently, all tickets are copied when status is changed.
+
+## License
+
+Apache License Ver. 2
